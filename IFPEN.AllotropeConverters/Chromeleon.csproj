@@ -3,11 +3,49 @@
   <PropertyGroup>
     <TargetFramework>net481</TargetFramework>
     <LanguageVersion>latest</LanguageVersion>
+    <PackageId>IFPEN.AllotropeConverters.Chromeleon</PackageId>
+    <Authors>Maxime Visconte</Authors>
+    <Company>IFPEN</Company>
+    <AssemblyTitle>Chromeleon to Allotrope Simple Model (ASM) converter</AssemblyTitle>
+    <Description>A converter to generate ASM files from Chromeleon</Description>
+    <Copyright>Copyright © 2026 IFP Energies nouvelles (IFPEN)</Copyright>
+    <RootNamespace>IFPEN.AllotropeConverters</RootNamespace>
+    <Version>1.0.0-beta</Version>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\IFPEN.AllotropeConverters.Chromeleon.xml</DocumentationFile>
+    <PackageLicenseExpression>CECILL-2.1</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/ifpen/AllotropeConverters.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>Minor update</PackageReleaseNotes>
+    <PackageTags>allotrope;models;chemistry;lab;data</PackageTags>
+    <PackageReadme></PackageReadme>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    
+    
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <Deterministic>true</Deterministic>
+
+
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="IFPEN.AllotropeConverters.AllotropeModels" Version="2025.6.5" />
   </ItemGroup>
+
+
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <Reference Include="Thermo.Chromeleon.Sdk">

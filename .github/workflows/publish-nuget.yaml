@@ -1,0 +1,57 @@
+
+name: Publish NuGet (net481)
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+
+permissions:
+  contents: read         # pour checkout
+  id-token: write        # OIDC requis par Trusted Publishing (nuget.org)
+
+
+jobs:
+  publish:
+    runs-on: windows-latest
+
+    env:
+      NUGET_SOURCE: https://api.nuget.org/v3/index.json
+      CONFIGURATION: Release
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x' 
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration $env:CONFIGURATION --no-restore
+
+      - name: Pack
+        run: |
+          dotnet pack ./Chromeleon.csproj `
+            --configuration $env:CONFIGURATION `
+            --no-build `
+            --output "$env:RUNNER_TEMP"
+
+      - name: NuGet login (Trusted Publishing)
+        uses: NuGet/login@v1
+        id: nuget-login
+        with:
+          user: mvisconte
+
+
+      - name: Push to nuget.org
+        run: |
+          dotnet nuget push "*.nupkg" --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+
+
+          }
