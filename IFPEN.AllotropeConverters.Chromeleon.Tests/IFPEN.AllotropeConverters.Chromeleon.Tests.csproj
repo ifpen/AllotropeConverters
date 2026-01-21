@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net481</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageReference Include="Moq" Version="4.20.70" />
+    <PackageReference Include="FluentAssertions" Version="6.12.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.15" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IFPEN.AllotropeConverters\Chromeleon.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <ChromeleonGacPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Thermo.Chromeleon.Sdk\v4.0_7.3.2.14225__f1413f165c7768f2\Thermo.Chromeleon.Sdk.dll</ChromeleonGacPath>
+    <ChromeleonSdkPath Condition="Exists('$(ChromeleonGacPath)')">$(ChromeleonGacPath)</ChromeleonSdkPath>
+    <ChromeleonSdkPath Condition="'$(ChromeleonSdkPath)' == ''">$(MSBuildThisFileDirectory)..\Dependencies\Thermo.Chromeleon.Sdk.dll</ChromeleonSdkPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Thermo.Chromeleon.Sdk">
+      <HintPath>$(ChromeleonSdkPath)</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Schemas\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

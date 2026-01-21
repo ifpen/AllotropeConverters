@@ -26,14 +26,19 @@ namespace Ifpen.AllotropeConverters.Chromeleon.Mappers
             string serial = _provider.GetSerialNumber(rootSymbol);
             string brand = _provider.GetManufacturer(rootSymbol);
 
-            return new DeviceSystemDocument
-            {
-                AssetManagementIdentifier = "N/A",
-                EquipmentSerialNumber = serial,
-                DeviceIdentifier = serial,
-                BrandName = brand,
-                ProductManufacturer = brand
-            };
+            return new DeviceSystemDocument(
+                assetManagementIdentifier: "N/A",
+                deviceIdentifier: serial,
+                modelNumber: null,
+                equipmentSerialNumber: serial,
+                firmwareVersion: null,
+                description: null,
+                brandName: brand,
+                productManufacturer: brand,
+                pumpModelNumber: null,
+                detectorModelNumber: null,
+                deviceDocument: null
+            );
         }
     }
 }

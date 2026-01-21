@@ -40,28 +40,25 @@ namespace Ifpen.AllotropeConverters.Chromeleon.Mappers
                 yList.Add(p.Y);
             }
 
-            return new ChromatogramDataCube
-            {
-                Label = signal.Name,
-                DatacubeStructure = new ChromatogramDatacubeStructure
-                {
-                    Dimensions = new List<ChromatogramDimension> {
-                        new ChromatogramDimension { 
-                            Concept = ChromatogramDimension.ConceptEnum.RetentionTime, 
-                            Unit = ChromatogramDimension.UnitEnum.S }
+            return new ChromatogramDataCube(
+                label: signal.Name,
+                datacubeStructure: new ChromatogramDatacubeStructure(
+                    dimensions: new List<ChromatogramDimension> {
+                        new ChromatogramDimension(
+                            concept: ChromatogramDimension.ConceptEnum.RetentionTime,
+                            unit: ChromatogramDimension.UnitEnum.S)
                     },
-                    Measures = new List<ChromatogramMeasure> {
-                        new ChromatogramMeasure { 
-                            ComponentDataType = ChromatogramMeasure.ComponentDataTypeEnum.DOUBLE,
-                            Unit = signal.Metadata?.SignalAxis?.Unit ?? "arb" }
+                    measures: new List<ChromatogramMeasure> {
+                        new ChromatogramMeasure(
+                            componentDataType: ChromatogramMeasure.ComponentDataTypeEnum.DOUBLE,
+                            unit: signal.Metadata?.SignalAxis?.Unit ?? "arb")
                     }
-                },
-                DatacubeData = new DatacubeData
-                {
-                    Dimensions = new List<List<double>> { xList },
-                    Measures = new List<List<double>> { yList }
-                }
-            };
+                ),
+                datacubeData: new DatacubeData(
+                    dimensions: new List<List<double>> { xList },
+                    measures: new List<List<double>> { yList }
+                )
+            );
         }
     }
 }
