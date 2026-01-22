@@ -17,7 +17,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageReleaseNotes>Minor update</PackageReleaseNotes>
     <PackageTags>allotrope;models;chemistry;lab;data</PackageTags>
-    <PackageReadme></PackageReadme>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
 
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -50,6 +50,7 @@
   <ItemGroup>
     <Reference Include="Thermo.Chromeleon.Sdk">
       <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Thermo.Chromeleon.Sdk\v4.0_7.3.2.14225__f1413f165c7768f2\Thermo.Chromeleon.Sdk.dll</HintPath>
+      <Private>false</Private>
     </Reference>
   </ItemGroup>
 
