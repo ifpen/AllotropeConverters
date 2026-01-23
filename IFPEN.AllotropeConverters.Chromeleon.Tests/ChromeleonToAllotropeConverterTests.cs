@@ -45,8 +45,9 @@ namespace IFPEN.AllotropeConverters.Chromeleon.Tests
         [Trait("Category", "Unit")]
         public void Convert_GivenNullInjection_ThrowsArgumentNullException()
         {
+            IInjection injection = null;
             // Act
-            Action act = () => _converter.Convert(null);
+            Action act = () => _converter.Convert(injection);
 
             // Assert
             act.Should().Throw<ArgumentNullException>();

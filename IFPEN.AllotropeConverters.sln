@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chromeleon", "IFPEN.Allotro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IFPEN.AllotropeConverters.Chromeleon.Tests", "IFPEN.AllotropeConverters.Chromeleon.Tests\IFPEN.AllotropeConverters.Chromeleon.Tests.csproj", "{9BC3258A-100B-44EE-99EB-8EEB28D2BCA9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Éléments de solution", "Éléments de solution", "{9C8CB701-102D-CF49-A3E0-89AC09D42C2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

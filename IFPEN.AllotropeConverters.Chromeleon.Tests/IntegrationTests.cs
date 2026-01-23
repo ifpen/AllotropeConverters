@@ -1,18 +1,19 @@
+using FluentAssertions;
+using Ifpen.AllotropeConverters.Chromeleon;
+using Ifpen.AllotropeConverters.Chromeleon.Abstractions;
+using Ifpen.AllotropeConverters.Chromeleon.Mappers;
+using Ifpen.AllotropeConverters.Domain;
+using IFPEN.AllotropeConverters.AllotropeModels;
+using IFPEN.AllotropeConverters.Chromeleon.Tests.TestHelpers;
+using Moq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using FluentAssertions;
-using IFPEN.AllotropeConverters.AllotropeModels;
-using IFPEN.AllotropeConverters.Chromeleon.Tests.TestHelpers;
-using Ifpen.AllotropeConverters.Chromeleon;
-using Ifpen.AllotropeConverters.Chromeleon.Mappers;
-using Ifpen.AllotropeConverters.Chromeleon.Abstractions;
-using Ifpen.AllotropeConverters.Domain;
-using Moq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Schema;
-using Newtonsoft.Json.Linq;
+using System.Reflection;
 using Thermo.Chromeleon.Sdk.Common;
 using Thermo.Chromeleon.Sdk.Interfaces;
 using Thermo.Chromeleon.Sdk.Interfaces.Data;
@@ -110,6 +111,49 @@ namespace IFPEN.AllotropeConverters.Chromeleon.Tests
 
                 bool valid = jsonObject.IsValid(schema, out IList<string> errors);
                 
+                // Assert.True(valid, $"Schema validation failed: {string.Join(", ", errors)}");
+                // Using FluentAssertions
+                valid.Should().BeTrue($"Schema validation failed: {string.Join(", ", errors)}");
+            }
+            else
+            {
+                // Warn or skip
+                // For now, we pass but note that schema was missing
+                Assert.True(true, "Schema file not found, skipping validation.");
+            }
+        }
+
+        [IfpenInternalFact]
+        [Trait("Category", "Integration")]
+        public void Convert_ActualInjectionUri_GeneratesValidAsmJson()
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var pekindDict = new Dictionary<Assembly, PortableExecutableKinds>();
+
+            foreach (var a in assemblies)
+            {
+                a.ManifestModule.GetPEKind(out var peKind, out _);
+                pekindDict[a] = peKind;
+            }
+
+
+            var converter = new ChromeleonToAllotropeConverter();
+            var injectionUri = new Uri("chrom://isntsv-pacha4/DATA_R06_sql/DSI/testSDK20250219-113941.seq/662.smp");
+            var model = converter.Convert(injectionUri);
+
+            model.Should().NotBeNull();
+            var json = JsonConvert.SerializeObject(model, Formatting.Indented);
+
+            // 6. Assert - Schema Validation
+            string schemaPath = Path.Combine("Schemas", "gas-chromatography.tabular.schema.json");
+            if (File.Exists(schemaPath))
+            {
+                string schemaJson = File.ReadAllText(schemaPath);
+                JSchema schema = JSchema.Parse(schemaJson);
+                JObject jsonObject = JObject.Parse(json);
+
+                bool valid = jsonObject.IsValid(schema, out IList<string> errors);
+
                 // Assert.True(valid, $"Schema validation failed: {string.Join(", ", errors)}");
                 // Using FluentAssertions
                 valid.Should().BeTrue($"Schema validation failed: {string.Join(", ", errors)}");

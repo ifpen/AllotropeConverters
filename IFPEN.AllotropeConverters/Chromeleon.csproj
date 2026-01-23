@@ -19,6 +19,8 @@
     <PackageTags>allotrope;models;chemistry;lab;data</PackageTags>
     <PackageReadme></PackageReadme>
     <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+    <PlatformTarget>x86</PlatformTarget>
+    <RuntimeIdentifier>win-x86</RuntimeIdentifier>
 
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>true</IncludeSymbols>

@@ -127,6 +127,24 @@ namespace Ifpen.AllotropeConverters.Chromeleon
             };
         }
 
+        /// <summary>
+        /// Converts the specified Chromeleon injection into an Allotrope Gas Chromatography model.
+        /// </summary>
+        /// <param name="injectionUri">The Uri of the Chromeleon injection to convert.</param>
+        /// <returns>The generated Allotrope model.</returns>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="injectionUri"/> does not match an injection.</exception>
+        public GasChromatographySimpleModel Convert(Uri injectionUri)
+        {
+            var itemFactory = CmSdk.GetItemFactory();
+            if (itemFactory.TryGetItem(injectionUri, out IInjection injection))
+            {
+                return Convert(injection);
+            } else
+            {
+                throw new ArgumentException(injectionUri.ToString());
+            }
+        }
+
         private MeasurementAggregateDocument MapMeasurements(IInjection injection, ISymbol rootSymbol)
         {
             var list = new List<MeasurementDocument>();
