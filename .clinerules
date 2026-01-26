@@ -1,0 +1,30 @@
+# RÈGLES DE CONDUITE POUR L'AGENT (PROJET IFPEN.AllotropeConverters)
+
+## 0. WORKFLOW DE DÉMARRAGE (OBLIGATOIRE)
+- **Au début de chaque nouvelle session**, tu DOIS lire le fichier `CURRENT_TASK.md` à la racine du projet.
+- Ce fichier contient ta mission actuelle. N'invente pas de nouvelles tâches tant que celles de `CURRENT_TASK.md` ne sont pas terminées.
+- Une fois une tâche terminée, mets à jour le fichier `CURRENT_TASK.md` (en cochant la case [x]) avant de demander la validation au développeur. point d'entrée `Program.cs` si nécessaire, et réussir à lancer un test qui instancie un `CmSdkScope` réel.
+
+## 1. Contraintes Techniques Absolues (NE JAMAIS ENFREINDRE)
+- **Framework :** Le projet utilise EXCLUSIVEMENT .NET Framework 4.8.1 (`net481`). NE JAMAIS suggérer ou écrire du code .NET Core, .NET 5/6/7/8.
+- **Plateforme :** La compilation cible STRICTEMENT `x86` (32-bit). N'utilise jamais `Any CPU` ou `x64` car le SDK Chromeleon est un composant COM 32-bit.
+- **C# Version :** Utilise la syntaxe C# compatible avec .NET Framework (C# 7.3 par défaut, pas de Records, pas de pattern matching C# 11+).
+
+## 2. Règle sur le SDK Propriétaire (Thermo.Chromeleon.Sdk)
+- Le SDK est propriétaire. Tu n'as pas accès à sa documentation complète.
+- **INTERDICTION D'HALLUCINER :** Si tu dois utiliser une interface du SDK (ex: `IInjection`, `ISignal`, `ISymbol`) que tu ne connais pas, DEMANDE d'abord au développeur ses propriétés et méthodes avant d'écrire le code.
+- La gestion des scopes du SDK utilise `CmSdkScope`. Respecte le pattern `IDisposable` du code existant.
+
+## 3. Architecture et Style de Code
+- **Mappers :** Suis le pattern établi (Interfaces `IMapper` injectées dans le constructeur).
+- **Exceptions :** Vérifie toujours la nullité des arguments en entrée (`ArgumentNullException`).
+- **Documentation :** Ajoute des commentaires XML (`/// <summary>`) pour chaque méthode et classe publique.
+
+## 4. Tests et TDD (Obligatoire)
+- Écris les tests AVANT ou PENDANT l'écriture du code de production.
+- **Tests Unitaires :** Utilise `xUnit`, `Moq`, `FluentAssertions`. Les interfaces Chromeleon doivent être mockées. Utilise les "Builders" existants (`InjectionBuilder`) pour créer tes données de test.
+- **Tests d'Intégration (ATTENTION) :** Le SDK réel ne peut pas être instancié dans un process de test standard (`testhost.x86`) à cause de la vérification stricte du flag d'assembly `32BitsRequired`. Voir `DEVELOPMENT.md`.
+
+## 5. Maintenance de la Documentation (Documentation-Driven Development)
+- **Le code et la documentation doivent évoluer ensemble.** - Si tu modifies l'architecture, ajoutes un nouveau Mapper, changes une dépendance, ou modifies la façon dont on build/teste le projet, tu DOIS mettre à jour le fichier `.md` correspondant (`ARCHITECTURE.md`, `DEVELOPMENT.md`, etc.) dans le même commit.
+- Considère qu'une tâche n'est pas "Terminée" tant que la documentation n'est pas alignée avec le code.
