@@ -56,15 +56,5 @@ namespace IFPEN.AllotropeConverters.Chromeleon.IntegrationTests
             }
         }
 
-        public static int Main(string[] args)
-        {
-            // This is needed to make the project an executable for Chromeleon SDK compatibility
-            // The actual test execution is handled by the test runner
-            Console.WriteLine("This is an executable test project for Chromeleon SDK compatibility.");
-            Console.WriteLine("Tests should be run through a test runner like Visual Studio Test Explorer or dotnet test.");
-
-            // Return 0 to indicate success when run directly
-            return 0;
-        }
     }
 }
