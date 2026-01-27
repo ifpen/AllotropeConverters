@@ -19,15 +19,6 @@ namespace IFPEN.AllotropeConverters.Chromeleon.IntegrationTests
         [Trait("Category", "Integration")]
         public void Convert_ActualInjectionUri_GeneratesValidAsmJson()
         {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            var pekindDict = new Dictionary<Assembly, PortableExecutableKinds>();
-
-            foreach (var a in assemblies)
-            {
-                a.ManifestModule.GetPEKind(out var peKind, out _);
-                pekindDict[a] = peKind;
-            }
-
             var converter = new ChromeleonToAllotropeConverter();
             var injectionUri = new Uri("chrom://isntsv-pacha4/DATA_R06_sql/DSI/testSDK20250219-113941.seq/662.smp");
             var model = converter.Convert(injectionUri);
@@ -43,7 +34,8 @@ namespace IFPEN.AllotropeConverters.Chromeleon.IntegrationTests
                 JSchema schema = JSchema.Parse(schemaJson);
                 JObject jsonObject = JObject.Parse(json);
 
-                bool valid = jsonObject.IsValid(schema, out IList<string> errors);
+
+                bool valid = jsonObject.IsValid(schema, out IList<ValidationError> errors);
 
                 // Using FluentAssertions
                 valid.Should().BeTrue($"Schema validation failed: {string.Join(", ", errors)}");

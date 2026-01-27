@@ -30,7 +30,6 @@ namespace Ifpen.AllotropeConverters.Chromeleon.Mappers
             if (injection == null) return new List<ProcessedDataDocument>();
 
             var peaks = _peakProvider.GetPeaks(injection, signal.Name);
-            if (peaks == null || !peaks.Any()) return new List<ProcessedDataDocument>();
 
             string signalUnit = signal.Metadata?.SignalAxis?.Unit ?? "arb";
             string areaUnit = $"{signalUnit} s";
