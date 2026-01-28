@@ -21,6 +21,11 @@ Le projet `IFPEN.AllotropeConverters.Chromeleon.IntegrationTests` est particulie
 ### Le "Pourquoi" (Le Problème Technique)
 Le SDK Chromeleon vérifie les en-têtes PE (CorFlags) et exige le flag `32BitsRequired`. L'hôte de test standard (`testhost.x86.exe`) n'a que le flag `ILOnly`. Cela fait crasher le SDK. En compilant les tests comme un exécutable autonome avec `<Prefer32Bit>true</Prefer32Bit>`, l'exécutable généré possède le bon flag.
 
-### Exécution (À réparer - Tâche Actuelle)
-Actuellement, le runner xUnit peine à s'exécuter correctement dans cette configuration "Console App". Le correctif de cette exécution est la priorité absolue du développement actuel.
+### Exécution
+Les tests peuvent maintenant être démarrés avec la commande suivante :
+
+```bash
+cmd /c "C:\Users\viscontm\.nuget\packages\xunit.runner.console\2.9.2\tools\net481\xunit.console.x86.exe" "IFPEN.AllotropeConverters.Chromeleon.IntegrationTests\bin\Debug\win-x86\IFPEN.AllotropeConverters.Chromeleon.IntegrationTests.exe" -nologo
+```
+
 * **Validation des JSON :** Ce projet utilise `Newtonsoft.Json.Schema` pour valider que la sortie du convertisseur respecte bien les schémas officiels Allotrope (inclus dans le dossier `Schemas\`).

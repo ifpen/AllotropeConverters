@@ -19,6 +19,8 @@
     <PackageTags>allotrope;models;chemistry;lab;data</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+    <PlatformTarget>x86</PlatformTarget>
+    <RuntimeIdentifier>win-x86</RuntimeIdentifier>
 
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>true</IncludeSymbols>
@@ -47,11 +49,24 @@
   </ItemGroup>
 
 
+  <PropertyGroup>
+    <ChromeleonGacPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Thermo.Chromeleon.Sdk\v4.0_7.3.2.14225__f1413f165c7768f2\Thermo.Chromeleon.Sdk.dll</ChromeleonGacPath>
+    <ChromeleonSdkPath Condition="Exists('$(ChromeleonGacPath)')">$(ChromeleonGacPath)</ChromeleonSdkPath>
+    <ChromeleonSdkPath Condition="'$(ChromeleonSdkPath)' == ''">$(MSBuildThisFileDirectory)..\Dependencies\Thermo.Chromeleon.Sdk.dll</ChromeleonSdkPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <Reference Include="Thermo.Chromeleon.Sdk">
-      <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Thermo.Chromeleon.Sdk\v4.0_7.3.2.14225__f1413f165c7768f2\Thermo.Chromeleon.Sdk.dll</HintPath>
+      <HintPath>$(ChromeleonSdkPath)</HintPath>
+      <SpecificVersion>False</SpecificVersion>
       <Private>false</Private>
     </Reference>
   </ItemGroup>
 
+  <Target Name="DebugPaths" BeforeTargets="Build">
+    <Message Text="[DEBUG] ChromeleonSdkPath is: $(ChromeleonSdkPath)" Importance="high" />
+    <Message Text="[DEBUG] GAC Exists: $([System.IO.File]::Exists('$(ChromeleonGacPath)'))" Importance="high"/>
+    <Message Text="[DEBUG] Full Path Local: $(MSBuildProjectDirectory)\..\..\Dependencies\Thermo.Chromeleon.Sdk.dll" Importance="high" />
+  </Target>
 </Project>
+
