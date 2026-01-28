@@ -32,3 +32,14 @@
 ## 5. Maintenance de la Documentation (Documentation-Driven Development)
 - **Le code et la documentation doivent évoluer ensemble.** - Si tu modifies l'architecture, ajoutes un nouveau Mapper, changes une dépendance, ou modifies la façon dont on build/teste le projet, tu DOIS mettre à jour le fichier `.md` correspondant (`ARCHITECTURE.md`, `DEVELOPMENT.md`, etc.) dans le même commit.
 - Considère qu'une tâche n'est pas "Terminée" tant que la documentation n'est pas alignée avec le code.
+
+## 6. Protocole de Gestion des Issues et Workflow Git
+- **Une Tâche = Une Branche :** Ne travaille jamais directement sur `main` ou `develop`. Crée systématiquement une branche dédiée au format : `type/description-courte` (ex: `fix/test-integration-sdk`, `feat/new-agilent-mapper`).
+- **Règle de Non-Régression (TDD) :**
+- Si tu résous un **Bug** : Tu DOIS d'abord écrire un test unitaire qui reproduit le bug et échoue (Red), avant d'écrire le correctif (Green). Ce test doit rester dans la codebase.
+- Si tu ajoutes une **Feature** : Aucun code métier n'est accepté sans son test unitaire associé.
+- **Commits Atomiques :** Fais des petits commits logiques avec des messages suivant la convention **Conventional Commits** (ex: `fix: handle null injection in mapper`, `docs: update deployment guide`).
+- **Pull Requests (PR) :**
+- Avant de signaler une tâche comme finie, vérifie que le projet compile et que TOUS les tests passent.
+- La PR doit être propre : pas de code commenté inutile, pas de fichiers temporaires.
+- La description de la PR doit résumer les changements techniques et lier l'issue concernée.
