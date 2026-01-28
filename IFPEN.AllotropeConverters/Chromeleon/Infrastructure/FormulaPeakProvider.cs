@@ -22,7 +22,7 @@ namespace Ifpen.AllotropeConverters.Chromeleon.Infrastructure
             try
             {
                 var itemFactory = CmSdk.GetItemFactory();
-                int peakIndex = 1;
+                int peakIndex = 0;
 
                 while (true)
                 {

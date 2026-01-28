@@ -13,6 +13,8 @@ namespace IFPEN.AllotropeConverters.Chromeleon.IntegrationTests
             // If no arguments are provided, show usage information
             if (args.Length == 0)
             {
+                var tests = new IntegrationTests();
+                tests.Convert_ActualInjectionUri_GeneratesValidAsmJson();
                 Console.WriteLine("IFPEN.AllotropeConverters.Chromeleon.IntegrationTests");
                 Console.WriteLine("This is an executable test project for Chromeleon SDK compatibility.");
                 Console.WriteLine();
