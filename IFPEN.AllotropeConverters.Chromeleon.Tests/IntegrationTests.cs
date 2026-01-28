@@ -54,8 +54,8 @@ namespace IFPEN.AllotropeConverters.Chromeleon.Tests
                         StartTimeSeconds = 110, 
                         EndTimeSeconds = 130, 
                         WidthBaselineSeconds = 20,
-                        Resolution = 1.5,
-                        TheoreticalPlates = 2000,
+                        ResolutionBaseline = 1.5,
+                        TheoreticalPlatesTangent = 2000,
                         Asymmetry = 1.0,
                         Skewness = 0.1
                     } 

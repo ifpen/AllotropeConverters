@@ -45,20 +45,20 @@ namespace Ifpen.AllotropeConverters.Chromeleon.Mappers
                     peakEnd: new PeakPeakEnd(p.EndTimeSeconds.Value, PeakPeakEnd.UnitEnum.S),
                     peakArea: new PeakPeakArea(p.Area.Value, areaUnit),
                     peakHeight: new PeakPeakHeight(p.Height.Value, signalUnit),
-                    peakWidthAtBaseline: new PeakPeakWidthAtBaseline(p.WidthBaselineSeconds.Value, PeakPeakWidthAtBaseline.UnitEnum.S),
-                    peakWidthAtHalfHeight: null,
-                    peakWidthAt5OfHeight: null,
+                    peakWidthAtBaseline: p.WidthBaselineSeconds.HasValue ? new PeakPeakWidthAtBaseline(p.WidthBaselineSeconds.Value, PeakPeakWidthAtBaseline.UnitEnum.S) : null,
+                    peakWidthAtHalfHeight: p.WidthHalfHeightSeconds.HasValue ? new PeakPeakWidthAtHalfHeight(p.WidthHalfHeightSeconds.Value, PeakPeakWidthAtHalfHeight.UnitEnum.S) : null,
+                    peakWidthAt5OfHeight: p.Width5PercentHeightSeconds.HasValue ? new PeakPeakWidthAt5OfHeight(p.Width5PercentHeightSeconds.Value, PeakPeakWidthAt5OfHeight.UnitEnum.S) : null,
                     asymmetryFactorMeasuredAt5Height: p.Asymmetry.HasValue ? new PeakAsymmetryFactorMeasuredAt5Height(p.Asymmetry.Value, PeakAsymmetryFactorMeasuredAt5Height.UnitEnum.Unitless) : null,
                     statisticalSkew: p.Skewness.HasValue ? new PeakStatisticalSkew(p.Skewness.Value, PeakStatisticalSkew.UnitEnum.Unitless) : null,
-                    numberOfTheoreticalPlatesByTangentMethod: p.TheoreticalPlates.HasValue ? new PeakNumberOfTheoreticalPlatesByTangentMethod(p.TheoreticalPlates.Value, PeakNumberOfTheoreticalPlatesByTangentMethod.UnitEnum.Unitless) : null,
-                    chromatographicPeakResolutionUsingBaselinePeakWidths: p.Resolution.HasValue ? new PeakChromatographicPeakResolutionUsingBaselinePeakWidths(p.Resolution.Value, PeakChromatographicPeakResolutionUsingBaselinePeakWidths.UnitEnum.Unitless) : null,
-                    numberOfTheoreticalPlatesByPeakWidthAtHalfHeight: null,
-                    capacityFactorChromatography: null,
-                    relativePeakHeight: null,
-                    relativePeakArea: null,
+                    numberOfTheoreticalPlatesByTangentMethod: p.TheoreticalPlatesTangent.HasValue ? new PeakNumberOfTheoreticalPlatesByTangentMethod(p.TheoreticalPlatesTangent.Value, PeakNumberOfTheoreticalPlatesByTangentMethod.UnitEnum.Unitless) : null,
+                    chromatographicPeakResolutionUsingBaselinePeakWidths: p.ResolutionBaseline.HasValue ? new PeakChromatographicPeakResolutionUsingBaselinePeakWidths(p.ResolutionBaseline.Value, PeakChromatographicPeakResolutionUsingBaselinePeakWidths.UnitEnum.Unitless) : null,
+                    numberOfTheoreticalPlatesByPeakWidthAtHalfHeight: p.TheoreticalPlatesHalfHeight.HasValue ? new PeakNumberOfTheoreticalPlatesByPeakWidthAtHalfHeight(p.TheoreticalPlatesHalfHeight.Value, PeakNumberOfTheoreticalPlatesByPeakWidthAtHalfHeight.UnitEnum.Unitless) : null,
+                    capacityFactorChromatography: p.CapacityFactor.HasValue ? new PeakCapacityFactorChromatography(p.CapacityFactor.Value, PeakCapacityFactorChromatography.UnitEnum.Unitless) : null,
+                    relativePeakHeight: p.RelativeHeight.HasValue ? new PeakRelativePeakHeight(p.RelativeHeight.Value, PeakRelativePeakHeight.UnitEnum.Percent) : null,
+                    relativePeakArea: p.RelativeArea.HasValue ? new PeakRelativePeakArea(p.RelativeArea.Value, PeakRelativePeakArea.UnitEnum.Percent) : null,
                     peakSelectivityChromatography: null,
-                    chromatographicPeakResolutionUsingPeakWidthAtHalfHeight: null,
-                    chromatographicPeakResolutionUsingStatisticalMoments: null
+                    chromatographicPeakResolutionUsingPeakWidthAtHalfHeight: p.ResolutionHalfHeight.HasValue ? new PeakChromatographicPeakResolutionUsingPeakWidthAtHalfHeight(p.ResolutionHalfHeight.Value, PeakChromatographicPeakResolutionUsingPeakWidthAtHalfHeight.UnitEnum.Unitless) : null,
+                    chromatographicPeakResolutionUsingStatisticalMoments: p.ResolutionStatisticalMoments.HasValue ? new PeakChromatographicPeakResolutionUsingStatisticalMoments(p.ResolutionStatisticalMoments.Value, PeakChromatographicPeakResolutionUsingStatisticalMoments.UnitEnum.Unitless) : null
                 ));
             }
             var peakList = new PeakList(list);

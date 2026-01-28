@@ -76,9 +76,15 @@ namespace IFPEN.AllotropeConverters.Chromeleon.Tests
                 Area = 1000.0,
                 Height = 50.0,
                 WidthBaselineSeconds = 5.0,
-                Resolution = 2.5,
-                TheoreticalPlates = 5000,
+                ResolutionBaseline = 2.5,
+                ResolutionHalfHeight = 2.0,
+                ResolutionStatisticalMoments = 1.8,
+                TheoreticalPlatesTangent = 5000,
+                TheoreticalPlatesHalfHeight = 4500,
                 Asymmetry = 1.1,
+                CapacityFactor = 3.5,
+                RelativeHeight = 15.0,
+                RelativeArea = 12.0,
                 Skewness = 0.5
             };
 
@@ -105,8 +111,14 @@ namespace IFPEN.AllotropeConverters.Chromeleon.Tests
             
             // Validate stats
             peak.ChromatographicPeakResolutionUsingBaselinePeakWidths.Value.Should().Be(2.5);
+            peak.ChromatographicPeakResolutionUsingPeakWidthAtHalfHeight.Value.Should().Be(2.0);
+            peak.ChromatographicPeakResolutionUsingStatisticalMoments.Value.Should().Be(1.8);
             peak.NumberOfTheoreticalPlatesByTangentMethod.Value.Should().Be(5000);
+            peak.NumberOfTheoreticalPlatesByPeakWidthAtHalfHeight.Value.Should().Be(4500);
             peak.AsymmetryFactorMeasuredAt5Height.Value.Should().Be(1.1);
+            peak.CapacityFactorChromatography.Value.Should().Be(3.5);
+            peak.RelativePeakHeight.Value.Should().Be(15.0);
+            peak.RelativePeakArea.Value.Should().Be(12.0);
             peak.StatisticalSkew.Value.Should().Be(0.5);
         }
 
@@ -131,9 +143,15 @@ namespace IFPEN.AllotropeConverters.Chromeleon.Tests
                 Area = 1000.0,
                 Height = 50.0,
                 WidthBaselineSeconds = 5.0,
-                Resolution = null,          // NULL - cannot be computed
-                TheoreticalPlates = null,   // NULL - cannot be computed
+                ResolutionBaseline = null,  // NULL - cannot be computed
+                ResolutionHalfHeight = null,
+                ResolutionStatisticalMoments = null,
+                TheoreticalPlatesTangent = null,   // NULL - cannot be computed
+                TheoreticalPlatesHalfHeight = null,
                 Asymmetry = null,            // NULL - cannot be computed
+                CapacityFactor = null,
+                RelativeHeight = null,
+                RelativeArea = null,
                 Skewness = null              // NULL - cannot be computed
             };
 
@@ -158,9 +176,84 @@ namespace IFPEN.AllotropeConverters.Chromeleon.Tests
 
             // These optional properties should be null when the source value is null
             peak.ChromatographicPeakResolutionUsingBaselinePeakWidths.Should().BeNull();
+            peak.ChromatographicPeakResolutionUsingPeakWidthAtHalfHeight.Should().BeNull();
+            peak.ChromatographicPeakResolutionUsingStatisticalMoments.Should().BeNull();
             peak.NumberOfTheoreticalPlatesByTangentMethod.Should().BeNull();
+            peak.NumberOfTheoreticalPlatesByPeakWidthAtHalfHeight.Should().BeNull();
             peak.AsymmetryFactorMeasuredAt5Height.Should().BeNull();
+            peak.CapacityFactorChromatography.Should().BeNull();
+            peak.RelativePeakHeight.Should().BeNull();
+            peak.RelativePeakArea.Should().BeNull();
             peak.StatisticalSkew.Should().BeNull();
+        }
+
+        [Fact]
+        public void Map_WhenPeaksFound_ShouldMapCustomWidths()
+        {
+            // Arrange
+            var injectionMock = new Mock<IInjection>();
+            var signalMock = new Mock<ISignal>();
+            signalMock.Setup(s => s.Injection).Returns(injectionMock.Object);
+            signalMock.Setup(s => s.Name).Returns("UV_VIS_1");
+            signalMock.Setup(s => s.Metadata.SignalAxis.Unit).Returns("mAU");
+
+            var peakData = new PeakData
+            {
+                Index = 1,
+                RetentionTimeSeconds = 10,
+                StartTimeSeconds = 9,
+                EndTimeSeconds = 11,
+                Area = 100,
+                Height = 10,
+                WidthBaselineSeconds = 1.0,
+                WidthHalfHeightSeconds = 0.5,
+                Width5PercentHeightSeconds = 0.8
+            };
+
+            _peakProviderMock.Setup(p => p.GetPeaks(injectionMock.Object, "UV_VIS_1"))
+                .Returns(new List<PeakData> { peakData });
+
+            // Act
+            var result = _mapper.Map(signalMock.Object);
+
+            // Assert
+            var peak = result[0].PeakList.Peak[0];
+            peak.PeakWidthAtBaseline.Value.Should().Be(1.0);
+            peak.PeakWidthAtHalfHeight.Value.Should().Be(0.5);
+            peak.PeakWidthAt5OfHeight.Value.Should().Be(0.8);
+        }
+
+        [Fact]
+        public void Map_WhenPeakHasNullBaselineWidth_ShouldNotThrow()
+        {
+            // Arrange
+            var injectionMock = new Mock<IInjection>();
+            var signalMock = new Mock<ISignal>();
+            signalMock.Setup(s => s.Injection).Returns(injectionMock.Object);
+            signalMock.Setup(s => s.Name).Returns("UV_VIS_1");
+            signalMock.Setup(s => s.Metadata.SignalAxis.Unit).Returns("mAU");
+
+            var peakData = new PeakData
+            {
+                Index = 1,
+                RetentionTimeSeconds = 10,
+                StartTimeSeconds = 9,
+                EndTimeSeconds = 11,
+                Area = 100,
+                Height = 10,
+                WidthBaselineSeconds = null // NULL baseline width (Issue #6)
+            };
+
+            _peakProviderMock.Setup(p => p.GetPeaks(injectionMock.Object, "UV_VIS_1"))
+                .Returns(new List<PeakData> { peakData });
+
+            // Act
+            System.Action act = () => _mapper.Map(signalMock.Object);
+
+            // Assert
+            act.Should().NotThrow<System.InvalidOperationException>();
+            var result = _mapper.Map(signalMock.Object);
+            result[0].PeakList.Peak[0].PeakWidthAtBaseline.Should().BeNull();
         }
     }
 }
