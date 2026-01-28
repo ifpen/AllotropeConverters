@@ -12,13 +12,12 @@ namespace Ifpen.AllotropeConverters.Chromeleon.Mappers
         /// <inheritdoc />
         public SampleDocument Map(IInjection injection)
         {
-            return new SampleDocument
-            {
-                SampleIdentifier = injection.Name,
-                Description = injection.Comment.Value,
-                WrittenName = injection.Name,
-                BatchIdentifier = "N/A"
-            };
+            return new SampleDocument(
+                sampleIdentifier: injection.Name,
+                description: injection.Comment.Value,
+                writtenName: injection.Name,
+                batchIdentifier: "N/A"
+            );
         }
     }
 }

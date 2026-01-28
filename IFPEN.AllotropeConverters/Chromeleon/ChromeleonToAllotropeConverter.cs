@@ -112,20 +112,37 @@ namespace Ifpen.AllotropeConverters.Chromeleon
             return new GasChromatographySimpleModel
             {
                 AsmManifest = GasChromatographySimpleModel.AsmManifestEnum.HttpPurlAllotropeOrgManifestsGasChromatographyREC202506GasChromatographyTabularManifest,
-                GasChromatographyAggregateDocument = new GasChromatographyAggregateDocument
-                {
-                    DeviceSystemDocument = _deviceMapper.Map(rootSymbol),
-                    GasChromatographyDocument = new List<GasChromatographyDocument>
+                GasChromatographyAggregateDocument = new GasChromatographyAggregateDocument(
+                    deviceSystemDocument: _deviceMapper.Map(rootSymbol),
+                    gasChromatographyDocument: new List<GasChromatographyDocument>
                     {
-                        new GasChromatographyDocument
-                        {
-                            Analyst = GetAnalyst(injection),
-                            DeviceMethodIdentifier = injection.InstrumentMethodName.Value,
-                            MeasurementAggregateDocument = MapMeasurements(injection, rootSymbol)
-                        }
+                        new GasChromatographyDocument(
+                            analyst: GetAnalyst(injection),
+                            submitter: null,
+                            deviceMethodIdentifier: injection.InstrumentMethodName.Value,
+                            measurementAggregateDocument: MapMeasurements(injection, rootSymbol),
+                            diagnosticTraceAggregateDocument: null)
                     }
-                }
+                )
             };
+        }
+
+        /// <summary>
+        /// Converts the specified Chromeleon injection into an Allotrope Gas Chromatography model.
+        /// </summary>
+        /// <param name="injectionUri">The Uri of the Chromeleon injection to convert.</param>
+        /// <returns>The generated Allotrope model.</returns>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="injectionUri"/> does not match an injection.</exception>
+        public GasChromatographySimpleModel Convert(Uri injectionUri)
+        {
+            var itemFactory = CmSdk.GetItemFactory();
+            if (itemFactory.TryGetItem(injectionUri, out IInjection injection))
+            {
+                return Convert(injection);
+            } else
+            {
+                throw new ArgumentException(injectionUri.ToString());
+            }
         }
 
         private MeasurementAggregateDocument MapMeasurements(IInjection injection, ISymbol rootSymbol)
@@ -135,36 +152,33 @@ namespace Ifpen.AllotropeConverters.Chromeleon
             {
                 foreach (ISignal signal in injection.Signals)
                 {
-                    list.Add(new MeasurementDocument
-                    {
-                        MeasurementIdentifier = signal.Id.ToString(),
-                        DetectionType = signal.Metadata?.DetectorDevice ?? "Unknown",
-                        ChromatogramDataCube = _dataCubeMapper.Map(signal),
-                        ChromatographyColumnDocument = _columnMapper.Map(rootSymbol),
-                        SampleDocument = _sampleMapper.Map(injection),
-                        ProcessedDataAggregateDocument = new ProcessedDataAggregateDocument
-                        {
-                            ProcessedDataDocument = _processedDataMapper.Map(signal)
-                        },
-                        DeviceControlAggregateDocument = new DeviceControlAggregateDocument
-                        {
-                            DeviceControlDocument = new List<DeviceControlDocument>
+                    list.Add(new MeasurementDocument(
+                        measurementIdentifier: signal.Id.ToString(),
+                        detectionType: signal.Metadata?.DetectorDevice ?? "Unknown",
+                        chromatogramDataCube: _dataCubeMapper.Map(signal),
+                        chromatographyColumnDocument: _columnMapper.Map(rootSymbol),
+                        sampleDocument: _sampleMapper.Map(injection),
+                        processedDataAggregateDocument: new ProcessedDataAggregateDocument(
+                            processedDataDocument: _processedDataMapper.Map(signal)
+                        ),
+                        deviceControlAggregateDocument: new DeviceControlAggregateDocument(
+                            deviceControlDocument: new List<DeviceControlDocument>
                             {
-                                new DeviceControlDocument { DeviceType = signal.Metadata?.DetectorDevice ?? "Unknown" }
+                                new DeviceControlDocument(deviceType: signal.Metadata?.DetectorDevice ?? "Unknown")
                             }
-                        },
-                        InjectionDocument = new InjectionDocument
-                        {
-                            InjectionIdentifier = injection.Name,
-                            InjectionTime = injection.InjectTime.Value.UtcDateTime,
-                            InjectionVolumeSetting = new InjectionDocumentInjectionVolumeSetting {
-                                Value = injection.InjectionVolume.Value.Value,
-                                Unit = InjectionDocumentInjectionVolumeSetting.UnitEnum.Micro_L }
-                        }
-                    });
+                        ),
+                        injectionDocument: new InjectionDocument(
+                            injectionIdentifier: injection.Name,
+                            injectionTime: injection.InjectTime.Value.UtcDateTime,
+                            injectionVolumeSetting: new InjectionDocumentInjectionVolumeSetting(
+                                value: injection.InjectionVolume.Value.Value,
+                                unit: InjectionDocumentInjectionVolumeSetting.UnitEnum.Micro_L
+                            )
+                        )
+                    ));
                 }
             }
-            return new MeasurementAggregateDocument { MeasurementDocument = list };
+            return new MeasurementAggregateDocument(measurementDocument: list);
         }
 
         private string GetAnalyst(IInjection injection) => injection.Signals?.Cast<ISignal>().FirstOrDefault()?.Metadata?.User ?? "N/A";

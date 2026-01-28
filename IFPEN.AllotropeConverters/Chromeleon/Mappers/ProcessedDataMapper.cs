@@ -30,85 +30,42 @@ namespace Ifpen.AllotropeConverters.Chromeleon.Mappers
             if (injection == null) return new List<ProcessedDataDocument>();
 
             var peaks = _peakProvider.GetPeaks(injection, signal.Name);
-            if (peaks == null || !peaks.Any()) return new List<ProcessedDataDocument>();
 
             string signalUnit = signal.Metadata?.SignalAxis?.Unit ?? "arb";
             string areaUnit = $"{signalUnit} s";
 
-            var peakList = new PeakList
+            var list = new List<Peak>();
+            foreach (var p in peaks)
             {
-                Peak = peaks.Select(p => new Peak
-                {
-                    Identifier = p.Index.ToString(),
-                    WrittenName = p.Name ?? $"Peak {p.Index}",
-
-                    RetentionTime = new PeakRetentionTime
-                    {
-                        Value = p.RetentionTimeSeconds.Value,
-                        Unit = PeakRetentionTime.UnitEnum.S
-                    },
-
-                    PeakStart = new PeakPeakStart
-                    {
-                        Value = p.StartTimeSeconds.Value,
-                        Unit = PeakPeakStart.UnitEnum.S
-                    },
-
-                    PeakEnd = new PeakPeakEnd
-                    {
-                        Value = p.EndTimeSeconds.Value,
-                        Unit = PeakPeakEnd.UnitEnum.S
-                    },
-
-                    PeakArea = new PeakPeakArea
-                    {
-                        Value = p.Area.Value,
-                        Unit = areaUnit
-                    },
-
-
-                    PeakHeight = new PeakPeakHeight
-                    {
-                        Value = p.Height.Value,
-                        Unit = signalUnit
-                    },
-
-                    PeakWidthAtBaseline = new PeakPeakWidthAtBaseline
-                    {
-                        Value = p.WidthBaselineSeconds.Value,
-                        Unit = PeakPeakWidthAtBaseline.UnitEnum.S
-                    },
-
-                    PeakWidthAtHalfHeight = null,
-                    PeakWidthAt5OfHeight = null,
-
-                    AsymmetryFactorMeasuredAt5Height = new PeakAsymmetryFactorMeasuredAt5Height
-                    {
-                        Value = p.Asymmetry.Value,
-                        Unit = PeakAsymmetryFactorMeasuredAt5Height.UnitEnum.Unitless
-                    },
-                    StatisticalSkew = new PeakStatisticalSkew
-                    {
-                        Value = p.Skewness.Value,
-                        Unit = PeakStatisticalSkew.UnitEnum.Unitless
-                    },
-
-                    NumberOfTheoreticalPlatesByTangentMethod = new PeakNumberOfTheoreticalPlatesByTangentMethod
-                    {
-                        Value = p.TheoreticalPlates.Value,
-                        Unit = PeakNumberOfTheoreticalPlatesByTangentMethod.UnitEnum.Unitless
-                    },
-
-                    ChromatographicPeakResolutionUsingBaselinePeakWidths = new PeakChromatographicPeakResolutionUsingBaselinePeakWidths
-                    {
-                        Value = p.Resolution.Value,
-                        Unit = PeakChromatographicPeakResolutionUsingBaselinePeakWidths.UnitEnum.Unitless
-                    }}).ToList()
-            };
+                list.Add(new Peak(
+                    identifier: p.Index.ToString(),
+                    writtenName: p.Name ?? $"Peak {p.Index}",
+                    retentionTime: new PeakRetentionTime(p.RetentionTimeSeconds.Value, PeakRetentionTime.UnitEnum.S),
+                    peakStart: new PeakPeakStart(p.StartTimeSeconds.Value, PeakPeakStart.UnitEnum.S),
+                    peakEnd: new PeakPeakEnd(p.EndTimeSeconds.Value, PeakPeakEnd.UnitEnum.S),
+                    peakArea: new PeakPeakArea(p.Area.Value, areaUnit),
+                    peakHeight: new PeakPeakHeight(p.Height.Value, signalUnit),
+                    peakWidthAtBaseline: new PeakPeakWidthAtBaseline(p.WidthBaselineSeconds.Value, PeakPeakWidthAtBaseline.UnitEnum.S),
+                    peakWidthAtHalfHeight: null,
+                    peakWidthAt5OfHeight: null,
+                    asymmetryFactorMeasuredAt5Height: new PeakAsymmetryFactorMeasuredAt5Height(p.Asymmetry.Value, PeakAsymmetryFactorMeasuredAt5Height.UnitEnum.Unitless),
+                    statisticalSkew: new PeakStatisticalSkew(p.Skewness.Value, PeakStatisticalSkew.UnitEnum.Unitless),
+                    numberOfTheoreticalPlatesByTangentMethod: new PeakNumberOfTheoreticalPlatesByTangentMethod(p.TheoreticalPlates.Value, PeakNumberOfTheoreticalPlatesByTangentMethod.UnitEnum.Unitless),
+                    chromatographicPeakResolutionUsingBaselinePeakWidths: new PeakChromatographicPeakResolutionUsingBaselinePeakWidths(p.Resolution.Value, PeakChromatographicPeakResolutionUsingBaselinePeakWidths.UnitEnum.Unitless),
+                    numberOfTheoreticalPlatesByPeakWidthAtHalfHeight: null,
+                    capacityFactorChromatography: null,
+                    relativePeakHeight: null,
+                    relativePeakArea: null,
+                    peakSelectivityChromatography: null,
+                    chromatographicPeakResolutionUsingPeakWidthAtHalfHeight: null,
+                    chromatographicPeakResolutionUsingStatisticalMoments: null
+                ));
+            }
+            var peakList = new PeakList(list);
 
             return new List<ProcessedDataDocument>
             {
-                new ProcessedDataDocument { PeakList = peakList }
+                new ProcessedDataDocument(peakList)
             };
         }
     }

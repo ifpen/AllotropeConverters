@@ -1,9 +1,13 @@
 # RÈGLES DE CONDUITE POUR L'AGENT (PROJET IFPEN.AllotropeConverters)
 
-## 0. WORKFLOW DE DÉMARRAGE (OBLIGATOIRE)
-- **Au début de chaque nouvelle session**, tu DOIS lire le fichier `CURRENT_TASK.md` à la racine du projet.
+## 0. WORKFLOW DE DÉMARRAGE ET CARTE DU SAVOIR (OBLIGATOIRE)
+- **Au début de chaque nouvelle session**, tu DOIS apprendre le contexte de l'application en lisant la documentation dans l'ordre suivant:
+1. **`CONTEXT.md`**: Pour comprendre le domaine métier (Chromatographie, Allotrope, Chromeleon, etc.).
+2. **`ARCHITECTURE.md`**: Pour comprendre comment le code est structuré.
+3. **`DEVELOPMENT.md`**: Pour savoir comment build, et tester le code.
+4. **`CURRENT_TASK.md`**
 - Ce fichier contient ta mission actuelle. N'invente pas de nouvelles tâches tant que celles de `CURRENT_TASK.md` ne sont pas terminées.
-- Une fois une tâche terminée, mets à jour le fichier `CURRENT_TASK.md` (en cochant la case [x]) avant de demander la validation au développeur. point d'entrée `Program.cs` si nécessaire, et réussir à lancer un test qui instancie un `CmSdkScope` réel.
+- Une fois une tâche terminée, mets à jour le fichier `CURRENT_TASK.md` (en cochant la case [x]) avant de demander la validation au développeur.
 
 ## 1. Contraintes Techniques Absolues (NE JAMAIS ENFREINDRE)
 - **Framework :** Le projet utilise EXCLUSIVEMENT .NET Framework 4.8.1 (`net481`). NE JAMAIS suggérer ou écrire du code .NET Core, .NET 5/6/7/8.

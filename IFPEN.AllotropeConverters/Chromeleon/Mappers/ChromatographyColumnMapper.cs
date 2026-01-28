@@ -28,27 +28,26 @@ namespace Ifpen.AllotropeConverters.Chromeleon.Mappers
             if (details == null)
                 return new ChromatographyColumnDocument { ChromatographyColumnSerialNumber = "N/A" };
 
-            return new ChromatographyColumnDocument
-            {
-                ChromatographyColumnSerialNumber = "N/A",
-                ChromatographyColumnChemistryType = details.Description,
-                ProductManufacturer = _provider.GetManufacturer(rootSymbol),
+            return new ChromatographyColumnDocument(
+                chromatographyColumnSerialNumber: "N/A",
+                chromatographyColumnChemistryType: details.Description,
+                productManufacturer: _provider.GetManufacturer(rootSymbol),
 
-                ChromatographyColumnLength = details.LengthMeters.HasValue
-                    ? new ChromatographyColumnDocumentChromatographyColumnLength { 
-                        Value = details.LengthMeters.Value,
-                        Unit = ChromatographyColumnDocumentChromatographyColumnLength.UnitEnum.M } : null,
+                chromatographyColumnLength: details.LengthMeters.HasValue
+                    ? new ChromatographyColumnDocumentChromatographyColumnLength(
+                        value: details.LengthMeters.Value,
+                        unit: ChromatographyColumnDocumentChromatographyColumnLength.UnitEnum.M) : null,
 
-                ColumnInnerDiameter = details.InternalDiameterMm.HasValue
-                    ? new ChromatographyColumnDocumentColumnInnerDiameter {
-                        Value = details.InternalDiameterMm.Value,
-                        Unit = ChromatographyColumnDocumentColumnInnerDiameter.UnitEnum.Mm } : null,
+                columnInnerDiameter: details.InternalDiameterMm.HasValue
+                    ? new ChromatographyColumnDocumentColumnInnerDiameter(
+                        value: details.InternalDiameterMm.Value,
+                        unit: ChromatographyColumnDocumentColumnInnerDiameter.UnitEnum.Mm) : null,
 
-                ChromatographyColumnParticleSize = details.FilmThicknessMicrons.HasValue
-                    ? new ChromatographyColumnDocumentChromatographyColumnParticleSize { 
-                        Value = details.FilmThicknessMicrons.Value,
-                        Unit = ChromatographyColumnDocumentChromatographyColumnParticleSize.UnitEnum.M } : null
-            };
+                chromatographyColumnParticleSize: details.FilmThicknessMicrons.HasValue
+                    ? new ChromatographyColumnDocumentChromatographyColumnParticleSize(
+                        value: details.FilmThicknessMicrons.Value,
+                        unit: ChromatographyColumnDocumentChromatographyColumnParticleSize.UnitEnum.M) : null
+            );
         }
     }
 }
