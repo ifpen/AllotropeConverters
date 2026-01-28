@@ -1,5 +1,17 @@
 # GUIDE DE DÉVELOPPEMENT
 
+> [!CAUTION]
+> **Prérequis OBLIGATOIRE : Chromeleon SDK**
+> 
+> Le SDK Chromeleon (`Thermo.Chromeleon.Sdk.dll`) est **propriétaire** et **ne peut pas être commité** dans le dépôt.
+> 
+> **Avant de compiler**, vous DEVEZ :
+> 1. Vérifier que le fichier `Dependencies\Thermo.Chromeleon.Sdk.dll` existe
+> 2. Si absent, récupérer le SDK depuis l'installation Chromeleon ou auprès d'un développeur autorisé
+> 3. Placer `Thermo.Chromeleon.Sdk.dll` dans le dossier `Dependencies\` à la racine du projet
+> 
+> Sans ce fichier, la compilation échouera avec ~57 erreurs (types SDK introuvables).
+
 ## Build et Dépendances
 * **Cible :** `win-x86`. Le SDK Chromeleon ne fonctionne qu'en 32-bit.
 * **Résolution du SDK :** Le `.csproj` cherche `Thermo.Chromeleon.Sdk.dll` d'abord dans le GAC (Global Assembly Cache), puis dans un dossier `..\Dependencies\`. 

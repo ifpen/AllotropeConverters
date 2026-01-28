@@ -482,3 +482,6 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Proprietary Chromeleon SDK (cannot be redistributed)
+Dependencies/
