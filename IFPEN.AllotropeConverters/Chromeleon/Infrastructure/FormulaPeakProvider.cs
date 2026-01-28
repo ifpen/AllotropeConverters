@@ -41,10 +41,18 @@ namespace Ifpen.AllotropeConverters.Chromeleon.Infrastructure
                         Area = EvaluateDouble(injection, "peak.area", context),
                         Height = EvaluateDouble(injection, "peak.height", context),
                         WidthBaselineSeconds = EvaluateDouble(injection, "peak.width", context) * 60.0,
-                        Resolution = EvaluateDouble(injection, "peak.resolution", context),
-                        TheoreticalPlates = EvaluateDouble(injection, "peak.theoretical_plates", context),
+                        ResolutionBaseline = EvaluateDouble(injection, "peak.resolution(\"pre2022-usp\")", context),
+                        ResolutionHalfHeight = EvaluateDouble(injection, "peak.resolution(\"ep/usp\")", context),
+                        ResolutionStatisticalMoments = EvaluateDouble(injection, "peak.resolution(\"sm\")", context),
+                        TheoreticalPlatesTangent = EvaluateDouble(injection, "peak.theoretical_plates(\"pre2022-usp\")", context),
+                        TheoreticalPlatesHalfHeight = EvaluateDouble(injection, "peak.theoretical_plates(\"ep/usp\")", context),
                         Asymmetry = EvaluateDouble(injection, "peak.asymmetry", context),
-                        Skewness = EvaluateDouble(injection, "peak.skewness", context)
+                        CapacityFactor = EvaluateDouble(injection, "peak.kValue", context),
+                        RelativeHeight = EvaluateDouble(injection, "peak.rel_height(\"total\")", context),
+                        RelativeArea = EvaluateDouble(injection, "peak.rel_area(\"total\")", context),
+                        Skewness = EvaluateDouble(injection, "peak.skewness", context),
+                        WidthHalfHeightSeconds = EvaluateDouble(injection, "peak.width(50)", context) * 60.0,
+                        Width5PercentHeightSeconds = EvaluateDouble(injection, "peak.width(5)", context) * 60.0
                     });
 
                     peakIndex++;

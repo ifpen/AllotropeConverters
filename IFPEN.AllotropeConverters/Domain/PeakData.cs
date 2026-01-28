@@ -49,14 +49,29 @@
         public double? WidthBaselineSeconds { get; set; }
 
         /// <summary>
-        /// Gets or sets the chromatographic resolution (USP/EP).
+        /// Gets or sets the chromatographic resolution (Pre-2022 USP).
         /// </summary>
-        public double? Resolution { get; set; }
+        public double? ResolutionBaseline { get; set; }
 
         /// <summary>
-        /// Gets or sets the number of theoretical plates.
+        /// Gets or sets the chromatographic resolution (EP/USP).
         /// </summary>
-        public double? TheoreticalPlates { get; set; }
+        public double? ResolutionHalfHeight { get; set; }
+
+        /// <summary>
+        /// Gets or sets the chromatographic resolution (Statistical Moments).
+        /// </summary>
+        public double? ResolutionStatisticalMoments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of theoretical plates (Tangent method).
+        /// </summary>
+        public double? TheoreticalPlatesTangent { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of theoretical plates (Half Height method).
+        /// </summary>
+        public double? TheoreticalPlatesHalfHeight { get; set; }
 
         /// <summary>
         /// Gets or sets the asymmetry factor.
@@ -64,8 +79,33 @@
         public double? Asymmetry { get; set; }
 
         /// <summary>
+        /// Gets or sets the capacity factor.
+        /// </summary>
+        public double? CapacityFactor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the relative height (relative to total).
+        /// </summary>
+        public double? RelativeHeight { get; set; }
+
+        /// <summary>
+        /// Gets or sets the relative area (relative to total).
+        /// </summary>
+        public double? RelativeArea { get; set; }
+
+        /// <summary>
         /// Gets or sets the statistical skewness of the peak.
         /// </summary>
         public double? Skewness { get; set; }
+
+        /// <summary>
+        /// Gets or sets the width of the peak at half height in seconds.
+        /// </summary>
+        public double? WidthHalfHeightSeconds { get; set; }
+
+        /// <summary>
+        /// Gets or sets the width of the peak at 5% height in seconds.
+        /// </summary>
+        public double? Width5PercentHeightSeconds { get; set; }
     }
 }

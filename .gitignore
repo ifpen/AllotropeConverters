@@ -485,3 +485,6 @@ $RECYCLE.BIN/
 
 # Proprietary Chromeleon SDK (cannot be redistributed)
 Dependencies/
+
+# VS Code
+.vscode/
