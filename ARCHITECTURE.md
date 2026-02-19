@@ -10,14 +10,29 @@ La classe principale (`ChromeleonToAllotropeConverter`) agit comme un chef d'orc
 * `IDataCubeMapper`
 * `IProcessedDataMapper`
 
-**Règle pour l'agent :** Pour ajouter un nouveau champ à convertir, il faut modifier le Mapper correspondant, pas le convertisseur principal.
+**Contrainte Architecturale :** Les nouveaux champs de conversion doivent être implémentés dans la classe spécialisée du Mapper concerné, maintenant le `ChromeleonToAllotropeConverter` uniquement comme une couche d'orchestration.
 
 ## 2. Gestion des Ressources (IDisposable)
 Le SDK Chromeleon utilise des ressources COM non managées. 
 * Les classes qui ouvrent un scope SDK (`CmSdkScope`) doivent implémenter `IDisposable`.
 * Suivre le pattern standard C# pour `Dispose(bool disposing)`.
 
-## 3. Surcharge de Constructeurs
-Les convertisseurs ont généralement plusieurs constructeurs :
-1. Un constructeur "Standalone" qui gère son propre `CmSdkScope` (pour une utilisation directe).
-2. Un constructeur avec injection (`DI`) pour les tests unitaires et l'intégration dans des apps plus larges.
+## 3. Modèles de Constructeurs
+Les convertisseurs fournissent plusieurs constructeurs pour différents cas d'utilisation :
+1. **Standalone** : Gère son propre `CmSdkScope` pour une invocation directe.
+2. **Injecté (DI)** : Accepte des dépendances pour les tests unitaires et l'intégration dans des systèmes plus larges.
+
+## 4. Peak Name Mapping (Strategy Pattern)
+Le `ProcessedDataMapper` utilise un pattern strategy pour la transformation des noms de pics :
+* **Interface** : `IPeakNameMappingStrategy` (méthode `MapName`).
+* **Comportement par défaut** : Par défaut, aucun mapping n'est effectué (passthrough via `DefaultPeakNameStrategy`).
+* **Stratégies optionnelles** : `WikidataFrenchNameStrategy` (traduction via Wikidata SPARQL).
+* **Décorateurs** : `MemoryCachePeakNameStrategy` (Cache en mémoire par session).
+* **Composition** : `Core Strategy (Default or Wikidata) → Memory Cache`.
+* **Configuration** : Fichier `peakname-config.json` dans le répertoire d'exécution. Exemple :
+  ```json
+  {
+    "enableWikidata": true,
+    "useMemoryCache": true
+  }
+  ```

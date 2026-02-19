@@ -58,7 +58,10 @@ namespace Ifpen.AllotropeConverters.Chromeleon.Infrastructure
                     peakIndex++;
                 }
             }
-            catch { /* Silent */ }
+            catch 
+            { 
+                // Ignore errors during peak traversal
+            }
 
             return peaks;
         }

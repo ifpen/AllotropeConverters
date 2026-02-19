@@ -488,3 +488,7 @@ Dependencies/
 
 # VS Code
 .vscode/
+
+# Peak name mapping config (contains API keys)
+peakname-config.json
+

@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using IFPEN.AllotropeConverters.AllotropeModels;
 using Ifpen.AllotropeConverters.Chromeleon.Abstractions;
+using Ifpen.AllotropeConverters.Chromeleon.PeakNameStrategies;
 using Thermo.Chromeleon.Sdk.Interfaces.Data;
 using Thermo.Chromeleon.Sdk.Interfaces.RawData;
 
@@ -13,14 +15,27 @@ namespace Ifpen.AllotropeConverters.Chromeleon.Mappers
     public class ProcessedDataMapper : IProcessedDataMapper
     {
         private readonly IPeakDataProvider _peakProvider;
+        private readonly IPeakNameMappingStrategy _nameStrategy;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcessedDataMapper"/> class.
+        /// Uses the default (passthrough) peak name strategy.
         /// </summary>
         /// <param name="peakProvider">The provider for peak data extraction.</param>
         public ProcessedDataMapper(IPeakDataProvider peakProvider)
+            : this(peakProvider, new DefaultPeakNameStrategy())
         {
-            _peakProvider = peakProvider;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProcessedDataMapper"/> class with a custom name mapping strategy.
+        /// </summary>
+        /// <param name="peakProvider">The provider for peak data extraction.</param>
+        /// <param name="nameStrategy">The strategy for mapping peak names.</param>
+        public ProcessedDataMapper(IPeakDataProvider peakProvider, IPeakNameMappingStrategy nameStrategy)
+        {
+            _peakProvider = peakProvider ?? throw new ArgumentNullException(nameof(peakProvider));
+            _nameStrategy = nameStrategy ?? throw new ArgumentNullException(nameof(nameStrategy));
         }
 
         /// <inheritdoc />
@@ -39,7 +54,7 @@ namespace Ifpen.AllotropeConverters.Chromeleon.Mappers
             {
                 list.Add(new Peak(
                     identifier: p.Index.ToString(),
-                    writtenName: p.Name ?? $"Peak {p.Index}",
+                    writtenName: _nameStrategy.MapName(p.Name) ?? $"Peak {p.Index}",
                     retentionTime: new PeakRetentionTime(p.RetentionTimeSeconds.Value, PeakRetentionTime.UnitEnum.S),
                     peakStart: new PeakPeakStart(p.StartTimeSeconds.Value, PeakPeakStart.UnitEnum.S),
                     peakEnd: new PeakPeakEnd(p.EndTimeSeconds.Value, PeakPeakEnd.UnitEnum.S),
