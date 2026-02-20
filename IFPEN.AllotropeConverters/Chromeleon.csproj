@@ -10,7 +10,7 @@
     <Description>A converter to generate ASM files from Chromeleon</Description>
     <Copyright>Copyright © 2026 IFP Energies nouvelles (IFPEN)</Copyright>
     <RootNamespace>IFPEN.AllotropeConverters</RootNamespace>
-    <Version>1.0.0-beta</Version>
+    <Version>1.0.0-beta2</Version>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\IFPEN.AllotropeConverters.Chromeleon.xml</DocumentationFile>
     <PackageLicenseExpression>CECILL-2.1</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/ifpen/AllotropeConverters.git</RepositoryUrl>
