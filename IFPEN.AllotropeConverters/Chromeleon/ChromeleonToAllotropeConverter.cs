@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using IFPEN.AllotropeConverters.AllotropeModels;
 using Ifpen.AllotropeConverters.Chromeleon.Abstractions;
+using Ifpen.AllotropeConverters.Chromeleon.Configuration;
 using Ifpen.AllotropeConverters.Chromeleon.Infrastructure;
 using Ifpen.AllotropeConverters.Chromeleon.Mappers;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using Thermo.Chromeleon.Sdk.Common;
 using Thermo.Chromeleon.Sdk.Interfaces.Data;
 using Thermo.Chromeleon.Sdk.Interfaces.Instruments.Symbols;
@@ -36,20 +39,8 @@ namespace Ifpen.AllotropeConverters.Chromeleon
         /// This constructor initializes a new <see cref="CmSdkScope"/> and performs a logon.
         /// It should only be used when running as a standalone application.
         /// </remarks>
-        public ChromeleonToAllotropeConverter()
+        public ChromeleonToAllotropeConverter() : this(new CmSdkScope())
         {
-            _managedScope = new CmSdkScope();
-            CmSdk.Logon.DoLogon();
-
-            var reader = new RobustSymbolReader();
-            var instrumentProvider = new MultiVendorInstrumentProvider(reader);
-            var peakProvider = new FormulaPeakProvider();
-
-            _deviceMapper = new DeviceSystemMapper(instrumentProvider);
-            _columnMapper = new ChromatographyColumnMapper(instrumentProvider);
-            _sampleMapper = new SampleMapper();
-            _dataCubeMapper = new DataCubeMapper();
-            _processedDataMapper = new ProcessedDataMapper(peakProvider);
         }
 
         /// <summary>
@@ -61,17 +52,29 @@ namespace Ifpen.AllotropeConverters.Chromeleon
         {
             if (activeScope == null) throw new ArgumentNullException(nameof(activeScope));
 
-            _managedScope = null;
+            // Configure Serilog
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.File("logs/converter-.log", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
 
+            var loggerFactory = new LoggerFactory().AddSerilog();
+
+            _managedScope = null; // Passed scope is managed externally.
+
+
+            CmSdk.Logon.DoLogon();
+ 
+            // Initialize providers and strategies
             var reader = new RobustSymbolReader();
             var instrumentProvider = new MultiVendorInstrumentProvider(reader);
             var peakProvider = new FormulaPeakProvider();
+            var nameStrategy = PeakNameStrategyFactory.CreateFromFile(loggerFactory);
 
             _deviceMapper = new DeviceSystemMapper(instrumentProvider);
             _columnMapper = new ChromatographyColumnMapper(instrumentProvider);
             _sampleMapper = new SampleMapper();
             _dataCubeMapper = new DataCubeMapper();
-            _processedDataMapper = new ProcessedDataMapper(peakProvider);
+            _processedDataMapper = new ProcessedDataMapper(peakProvider, nameStrategy);
         }
 
         /// <summary>

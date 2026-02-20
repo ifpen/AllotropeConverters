@@ -1,14 +1,11 @@
 # MISSION ACTUELLE
 
-## Tâche en cours : Traiter https://github.com/ifpen/AllotropeConverters/issues/4
-- [x] Analysé et compris le bug (null values dans ProcessedDataMapper)
-- [x] Créé test TDD qui reproduit le bug
-- [x] Implémenté le correctif avec vérifications `.HasValue`
-- [x] Corrigé le test pour respecter le schéma Allotrope
-- [x] Vérifié que tous les tests passent (7/7)
-- [x] Mis à jour la documentation (DEVELOPMENT.md, .gitignore)
-- [x] Commit effectué sur la branche `fix/null-peak-values`
+## Tâche en cours : Créer un service de mapping pour le nom des pics, en utilisant Wikidata comme pivot.
 
-**Issue #4 : Résolue ✅**
+TODO:
+- [x] Vérifier les commentaires dans le code pour voir si des choses doivent être modifiées.
+- [x] Vérifier que tous les tests sont OK.
+- [x] Vérifier que quand on utilise la stratégie "Wikidata", le cache en mémoire est bien utilisé avant l'appel à l'API.
+- [x] Créer les fichiers de configuration nécessaires
+- [x] Mettre à jour toute la documentation (avec les détails du logging, des fichiers de configuration, etc.)
 
-Prochaine étape : Créer la Pull Request

@@ -43,3 +43,6 @@
 - Avant de signaler une tâche comme finie, vérifie que le projet compile et que TOUS les tests passent.
 - La PR doit être propre : pas de code commenté inutile, pas de fichiers temporaires.
 - La description de la PR doit résumer les changements techniques et lier l'issue concernée.
+## 7. Nettoyage et Propreté
+- **Self-Cleaning :** Tu DOIS supprimer tous les fichiers temporaires que tu as créés pendant ta session (fichiers de logs de build, rapports de tests `.trx` temporaires, fichiers de debug).
+- Le repository doit rester propre à la fin de chaque tâche. Aucun fichier "déchet" ne doit être laissé dans la structure du projet.

@@ -255,5 +255,44 @@ namespace IFPEN.AllotropeConverters.Chromeleon.Tests
             var result = _mapper.Map(signalMock.Object);
             result[0].PeakList.Peak[0].PeakWidthAtBaseline.Should().BeNull();
         }
+
+        [Fact]
+        public void Map_WhenStrategyConfigured_UsesStrategyForPeakName()
+        {
+            // Arrange
+            var injectionMock = new Mock<IInjection>();
+            var signalMock = new Mock<ISignal>();
+            signalMock.Setup(s => s.Injection).Returns(injectionMock.Object);
+            signalMock.Setup(s => s.Name).Returns("UV_VIS_1");
+            signalMock.Setup(s => s.Metadata.SignalAxis.Unit).Returns("mAU");
+
+            var peakData = new PeakData
+            {
+                Index = 1,
+                Name = "Acetone",
+                RetentionTimeSeconds = 10,
+                StartTimeSeconds = 9,
+                EndTimeSeconds = 11,
+                Area = 100,
+                Height = 10
+            };
+
+            _peakProviderMock.Setup(p => p.GetPeaks(injectionMock.Object, "UV_VIS_1"))
+                .Returns(new List<PeakData> { peakData });
+
+            // Create a mock strategy that translates "Acetone" to "Acétone"
+            var strategyMock = new Mock<Ifpen.AllotropeConverters.Chromeleon.Abstractions.IPeakNameMappingStrategy>();
+            strategyMock.Setup(s => s.MapName("Acetone")).Returns("Acétone");
+
+            var mapperWithStrategy = new ProcessedDataMapper(_peakProviderMock.Object, strategyMock.Object);
+
+            // Act
+            var result = mapperWithStrategy.Map(signalMock.Object);
+
+            // Assert
+            result[0].PeakList.Peak[0].WrittenName.Should().Be("Acétone");
+            strategyMock.Verify(s => s.MapName("Acetone"), Times.Once);
+        }
     }
 }
+

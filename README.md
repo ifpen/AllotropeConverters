@@ -79,6 +79,24 @@ public void ProcessInjection(CmSdkScope activeScope, IInjection myInjection)
 }
 ```
 
+## Configuration
+
+The peak name mapping behavior can be customized by adding a `peakname-config.json` file in your application's execution directory.
+
+### Example `peakname-config.json`
+```json
+{
+  "enableWikidata": true,
+  "useMemoryCache": true
+}
+```
+
+### Options
+- **`enableWikidata`** (bool, default `false`): If true, enables the Wikidata retrieval of French names for chemical compounds.
+- **`useMemoryCache`** (bool, default `false`): If true, wraps the mapping strategy with an in-memory cache to avoid redundant network calls or processing.
+
+If no configuration file is found, the converter defaults to a passthrough strategy (original peak names are kept).
+
 ## Architecture
 
 This library follows **Clean Architecture** principles to ensure maintainability and testability:

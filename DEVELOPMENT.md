@@ -41,3 +41,5 @@ cmd /c "C:\Users\viscontm\.nuget\packages\xunit.runner.console\2.9.2\tools\net48
 ```
 
 * **Validation des JSON :** Ce projet utilise `Newtonsoft.Json.Schema` pour valider que la sortie du convertisseur respecte bien les schémas officiels Allotrope (inclus dans le dossier `Schemas\`).
+
+
